@@ -1,0 +1,24 @@
+import gzip
+
+def calculate_gc_content(sequence):
+    g_c_count = sequence.count('G') + sequence.count('C')
+    total_count = len(sequence)
+    if total_count == 0:
+        return 0
+    return (g_c_count / total_count) * 100
+
+def process_fastq_gz_file(filename):
+    gc_contents = []
+    with gzip.open(filename, 'rt') as file:  
+        for i, line in enumerate(file):
+            if i % 4 == 1:  
+                gc_content = calculate_gc_content(line.strip())
+                gc_contents.append(gc_content)
+                
+    average_gc_content = sum(gc_contents) / len(gc_contents) if gc_contents else 0
+    return average_gc_content
+
+#You can try this example with the file in the repo
+filename = 'utsav_mac_S1_L001_R2_001.fastq.gz'
+average_gc_content = process_fastq_gz_file(filename)
+print(f'Average GC Content: {average_gc_content:.2f}%')
